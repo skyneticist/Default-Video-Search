@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Default Video Search</title>
+    <link rel="stylesheet" href="styles.css?v=29" />
+  </head>
+  <body>
+    <main class="app-shell" id="appShell">
+      <section class="studio-panel" id="settingsPanel">
+        <div class="panel-top">
+          <div class="brand-lockup">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <div class="brand-copy">
+              <p class="eyebrow">Raw upload title finder</p>
+              <h1><span>Default</span> <span>Video</span> <span>Search</span></h1>
+            </div>
+          </div>
+          <button class="settings-toggle" id="settingsToggle" type="button" aria-controls="settingsBody" aria-expanded="true" title="Hide settings" aria-label="Hide settings">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-11ZM6.5 6a.5.5 0 0 0-.5.5v11a.5.5 0 0 0 .5.5H10V6H6.5Zm5.5 0v12h5.5a.5.5 0 0 0 .5-.5v-11a.5.5 0 0 0-.5-.5H12Z" />
+            </svg>
+          </button>
+          <span class="collapsed-app-name" aria-hidden="true" title="Default Video Search">Default Video Search</span>
+        </div>
+
+        <div class="settings-body" id="settingsBody">
+          <details class="filter-block" open>
+            <summary>Filters</summary>
+            <div class="field-stack">
+              <label class="text-field" for="patternInput">
+                <span>Pattern focus</span>
+                <input id="patternInput" type="search" placeholder="GoPro, WhatsApp, Canon, DJI..." autocomplete="off" />
+              </label>
+
+              <div class="range-grid">
+                <label class="mini-field" for="fromYear">
+                  <span>From</span>
+                  <input id="fromYear" type="number" min="2005" max="2026" value="2012" />
+                </label>
+                <label class="mini-field" for="toYear">
+                  <span>To</span>
+                  <input id="toYear" type="number" min="2005" max="2026" value="2026" />
+                </label>
+              </div>
+
+              <div class="range-grid">
+                <label class="mini-field" for="minNumber">
+                  <span>Seq min</span>
+                  <input id="minNumber" type="number" min="0" value="1" />
+                </label>
+                <label class="mini-field" for="maxNumber">
+                  <span>Seq max</span>
+                  <input id="maxNumber" type="number" min="1" value="9999" />
+                </label>
+              </div>
+
+              <fieldset class="switch-row" aria-label="Query options">
+                <label class="switch-pill">
+                  <input id="includeSite" type="checkbox" checked />
+                  <span>YouTube</span>
+                </label>
+                <label class="switch-pill">
+                  <input id="includeExtension" type="checkbox" checked />
+                  <span>Extension</span>
+                </label>
+              </fieldset>
+            </div>
+          </details>
+
+          <div class="lead-list" id="leadList" aria-label="Filename selector types"></div>
+        </div>
+      </section>
+
+      <section class="wheel-stage" aria-labelledby="wheelTitle">
+        <div class="result-panel" aria-live="polite">
+          <div class="result-hero">
+            <div class="result-head">
+              <div>
+                <p class="eyebrow" id="leadPrefixLabel">Prefix</p>
+                <h2 id="wheelTitle">Lead pending</h2>
+              </div>
+              <p class="entropy-chip" id="entropyChip">entropy idle</p>
+            </div>
+
+            <div class="wheel-dock">
+              <div class="wheel-status">
+                <span id="wheelFamilyLabel">Selector pending</span>
+                <small id="wheelFamilyCue">spin or choose a selector</small>
+              </div>
+              <div class="wheel-wrap">
+                <div class="pointer" aria-hidden="true"></div>
+                <div class="wheel" id="wheel" role="img" aria-label="Lead type wheel"></div>
+                <button class="center-spin" id="spinButton" type="button" title="Spin wheel" aria-label="Spin wheel">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5a7 7 0 1 1-6.32 4H3l4-4 4 4H7.82A5 5 0 1 0 12 7V5Z" />
+                  </svg>
+                  <span>Spin</span>
+                </button>
+              </div>
+              <div class="wheel-legend" id="wheelLegend" aria-label="Wheel selector legend"></div>
+              <div class="token-row" id="tokenRow"></div>
+            </div>
+          </div>
+
+          <div class="build-visual" id="buildVisual" data-stage="idle">
+            <div class="build-steps" aria-label="Generation progress">
+              <span class="build-step" data-step="spin">
+                <span class="step-dot" aria-hidden="true"></span>
+                <strong>Selector</strong>
+                <small id="wheelStepText">family</small>
+              </span>
+              <span class="build-step" data-step="generate">
+                <span class="step-dot" aria-hidden="true"></span>
+                <strong>Pattern</strong>
+                <small id="generateStepText">format + variables</small>
+              </span>
+              <span class="build-step" data-step="combine">
+                <span class="step-dot" aria-hidden="true"></span>
+                <strong>Combine</strong>
+                <small id="combineStepText">query</small>
+              </span>
+            </div>
+
+            <div class="generator-board">
+              <div class="value-reel" data-reel="pattern">
+                <span>Format</span>
+                <strong id="patternReel">pending</strong>
+              </div>
+              <div class="value-reel" data-reel="date">
+                <span>Date</span>
+                <strong id="dateReel">pending</strong>
+              </div>
+              <div class="value-reel" data-reel="number">
+                <span>Sequence</span>
+                <strong id="numberReel">pending</strong>
+              </div>
+              <div class="value-reel" data-reel="extension">
+                <span>Extension</span>
+                <strong id="extensionReel">pending</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="search-card">
+            <div class="field-shell">
+              <div class="field-head">
+                <label for="queryOutput">Search term</label>
+                <button class="copy-mini" id="copyButton" type="button" title="Copy search term" aria-label="Copy search term">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-1v1a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3h1V7Zm3-1a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-6Zm-3 4H7a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-1h-3a3 3 0 0 1-3-3v-3Z" />
+                  </svg>
+                  <span class="sr-only">Copy search term</span>
+                </button>
+              </div>
+              <textarea id="queryOutput" readonly rows="2"></textarea>
+            </div>
+
+            <div class="field-shell">
+              <div class="field-head">
+                <label for="urlOutput">Full YouTube URL</label>
+                <button class="copy-mini" id="copyUrlButton" type="button" title="Copy full YouTube URL" aria-label="Copy full YouTube URL">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-1v1a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3h1V7Zm3-1a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-6Zm-3 4H7a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-1h-3a3 3 0 0 1-3-3v-3Z" />
+                  </svg>
+                  <span class="sr-only">Copy full YouTube URL</span>
+                </button>
+              </div>
+              <input id="urlOutput" type="text" readonly value="" />
+            </div>
+          </div>
+
+          <div class="pattern-card" id="patternMeta"></div>
+        </div>
+      </section>
+    </main>
+
+    <template id="leadButtonTemplate">
+      <button class="lead-button" type="button">
+        <span class="lead-swatch" aria-hidden="true"></span>
+        <span class="lead-copy">
+          <strong></strong>
+          <small></small>
+        </span>
+      </button>
+    </template>
+
+    <script src="filename-patterns.js?v=27"></script>
+    <script src="app.js?v=27"></script>
+  </body>
+</html>

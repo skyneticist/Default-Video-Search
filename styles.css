@@ -29,17 +29,40 @@ html {
 }
 
 body {
+  position: relative;
   height: 100%;
   min-height: 100dvh;
   margin: 0;
   color: var(--paper);
-  background:
-    linear-gradient(180deg, rgba(246, 243, 232, 0.035), transparent 38%),
-    repeating-linear-gradient(135deg, rgba(246, 243, 232, 0.032) 0 1px, transparent 1px 24px),
-    repeating-linear-gradient(90deg, rgba(33, 166, 161, 0.025) 0 1px, transparent 1px 96px),
-    repeating-linear-gradient(45deg, rgba(140, 98, 217, 0.018) 0 1px, transparent 1px 60px),
-    linear-gradient(145deg, #141616 0%, #20201e 48%, #121414 100%);
+  background: #101413;
   overflow: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body::before {
+  background:
+    radial-gradient(ellipse at 50% -12%, rgba(127, 218, 214, 0.12), transparent 48%),
+    radial-gradient(ellipse at 64% 112%, rgba(140, 98, 217, 0.09), transparent 42%),
+    linear-gradient(180deg, rgba(246, 243, 232, 0.025), transparent 35%),
+    linear-gradient(145deg, #111716 0%, #181a18 48%, #0b0f0f 100%);
+}
+
+body::after {
+  background:
+    repeating-radial-gradient(ellipse at 9% 16%, rgba(246, 243, 232, 0.028) 0 1px, transparent 1px 22px),
+    repeating-radial-gradient(ellipse at 94% 82%, rgba(127, 218, 214, 0.022) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(0deg, rgba(246, 243, 232, 0.013) 0 1px, transparent 1px 11px),
+    radial-gradient(ellipse at 50% 48%, transparent 0 54%, rgba(0, 0, 0, 0.34) 100%);
+  opacity: 0.82;
+  mix-blend-mode: screen;
 }
 
 button,
@@ -55,6 +78,7 @@ button {
 .app-shell {
   --shell-pad: clamp(10px, 1.4vw, 18px);
   position: relative;
+  z-index: 1;
   width: 100%;
   height: 100dvh;
   min-height: 0;
@@ -607,16 +631,18 @@ textarea:focus {
 
 .result-hero {
   display: grid;
-  grid-template-rows: auto minmax(0, auto);
-  gap: clamp(12px, 1.6vw, 18px);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(10px, 1.35vw, 16px);
+  min-height: 0;
   min-width: 0;
+  overflow: hidden;
 }
 
 .stage-topline,
 .result-head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
 }
 
@@ -874,8 +900,9 @@ textarea:focus {
 }
 
 .result-panel {
+  --panel-accent: #7fdad6;
   display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto auto 150px;
   gap: clamp(10px, 1.3vw, 16px);
   align-self: stretch;
   width: min(100%, 1120px);
@@ -884,7 +911,17 @@ textarea:focus {
   min-height: 0;
   max-height: 100%;
   padding: clamp(14px, 1.7vw, 22px);
+  border-color: color-mix(in srgb, var(--panel-accent) 18%, rgba(246, 243, 232, 0.13));
   border-radius: 8px;
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--panel-accent) 6%, transparent), transparent 36%),
+    linear-gradient(180deg, rgba(140, 98, 217, 0.032), transparent 52%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.042), rgba(255, 255, 255, 0.012)),
+    rgba(32, 32, 29, 0.9);
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 color-mix(in srgb, var(--panel-accent) 10%, transparent),
+    inset 0 0 0 1px rgba(246, 243, 232, 0.018);
   overflow: hidden;
 }
 
@@ -894,8 +931,17 @@ textarea:focus {
 
 .result-head h2 {
   color: #f8d878;
+  display: -webkit-box;
+  max-height: 2.08em;
+  font-size: clamp(1.32rem, 2.05vw, 1.92rem);
+  line-height: 1.04;
   text-shadow: 0 0 28px rgba(243, 195, 60, 0.26);
+  overflow: hidden;
   overflow-wrap: anywhere;
+  text-wrap: balance;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
 }
 
 .token-row {
@@ -935,8 +981,10 @@ textarea:focus {
   max-width: min(58vw, 660px);
   color: var(--muted);
   letter-spacing: 0;
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-transform: none;
+  white-space: nowrap;
 }
 
 .build-visual {
@@ -1199,17 +1247,12 @@ textarea:focus {
   text-transform: uppercase;
 }
 
-.search-card textarea {
-  height: 44px;
-  min-height: 42px;
-  max-height: 44px;
-  padding: 8px 10px;
-  line-height: 1.3;
-  resize: none;
-}
-
 .search-card input {
   height: 34px;
+  padding: 0 10px;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .copy-mini {
@@ -1257,20 +1300,28 @@ textarea:focus {
 }
 
 .pattern-card {
+  --pattern-accent: #a78bfa;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: 44px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 1.08fr) minmax(156px, 0.86fr);
+  grid-template-rows: 54px minmax(0, 1fr);
   align-content: stretch;
   align-self: start;
-  gap: 1px;
-  height: min(100%, 132px);
-  max-height: 132px;
+  gap: 6px;
+  height: min(100%, 150px);
+  max-height: 150px;
   min-height: 0;
   min-width: 0;
+  padding: 6px;
   overflow: hidden;
-  border: 1px solid rgba(246, 243, 232, 0.11);
+  border: 1px solid color-mix(in srgb, var(--pattern-accent) 34%, rgba(246, 243, 232, 0.12));
   border-radius: 8px;
-  background: rgba(246, 243, 232, 0.08);
+  background:
+    linear-gradient(110deg, color-mix(in srgb, var(--pattern-accent) 13%, transparent), transparent 48%),
+    linear-gradient(180deg, rgba(246, 243, 232, 0.042), rgba(246, 243, 232, 0.012)),
+    rgba(246, 243, 232, 0.07);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--pattern-accent) 14%, transparent),
+    inset 0 0 0 1px rgba(246, 243, 232, 0.025);
   contain: layout paint;
 }
 
@@ -1279,23 +1330,35 @@ textarea:focus {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   align-content: start;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
   min-height: 0;
-  padding: 6px 9px;
-  border-left: 3px solid var(--meta-accent);
-  background: rgba(8, 8, 7, 0.22);
+  padding: 7px 9px 6px;
+  border: 1px solid rgba(246, 243, 232, 0.075);
+  border-top: 2px solid var(--meta-accent);
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--meta-accent) 8%, transparent), transparent 82%),
+    rgba(8, 8, 7, 0.2);
   overflow: hidden;
 }
 
 .pattern-meta-item.is-wide {
   grid-column: 1 / -1;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 4px;
-  padding: 6px 10px;
-  border-top: 1px solid rgba(246, 243, 232, 0.1);
+  align-content: start;
+  gap: 5px;
+  padding: 8px 12px 9px 10px;
+  border-top: 1px solid rgba(246, 243, 232, 0.08);
   border-left: 3px solid rgba(140, 98, 217, 0.72);
-  background: rgba(140, 98, 217, 0.07);
+  border-radius: 6px;
+  background:
+    linear-gradient(90deg, rgba(140, 98, 217, 0.12), transparent 58%),
+    rgba(140, 98, 217, 0.06);
+}
+
+.pattern-meta-item.is-wide > .meta-label {
+  white-space: nowrap;
 }
 
 .pattern-meta-item.is-source {
@@ -1314,18 +1377,19 @@ textarea:focus {
   min-width: 0;
   color: var(--paper);
   font-size: 0.82rem;
-  line-height: 1.22;
+  line-height: 1.24;
   overflow-wrap: anywhere;
 }
 
 .pattern-meta-item.is-wide strong {
   min-height: 0;
-  max-height: 2.5em;
+  max-height: 2.55em;
   overflow: hidden;
   padding-right: 3px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
 }
 
 .pattern-meta-item.is-source > .meta-label {
@@ -1343,12 +1407,12 @@ textarea:focus {
 .meta-chip-row {
   display: flex;
   flex-wrap: nowrap;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
-  min-height: 22px;
+  min-height: 25px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: 1px;
+  padding: 1px 1px 3px 0;
   scroll-snap-type: x proximity;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--meta-accent) 55%, rgba(246, 243, 232, 0.16)) transparent;
@@ -1371,11 +1435,11 @@ textarea:focus {
   display: inline-flex;
   align-items: center;
   flex: 0 0 auto;
-  max-width: 22ch;
-  height: 20px;
-  padding: 0 6px;
+  max-width: 26ch;
+  height: 22px;
+  padding: 0 7px;
   border: 1px solid rgba(246, 243, 232, 0.12);
-  border-radius: 5px;
+  border-radius: 6px;
   color: var(--paper);
   background: rgba(246, 243, 232, 0.045);
   font-size: 0.66rem;
@@ -1425,16 +1489,15 @@ textarea:focus {
   animation-delay: 130ms;
 }
 
-.search-card.is-revealing textarea,
 .search-card.is-revealing input {
   animation: outputValueReveal 520ms cubic-bezier(0.16, 0.92, 0.2, 1) both;
 }
 
-.search-card.is-revealing textarea {
+.search-card.is-revealing .field-shell:nth-child(1) input {
   animation-delay: 110ms;
 }
 
-.search-card.is-revealing input {
+.search-card.is-revealing .field-shell:nth-child(2) input {
   animation-delay: 230ms;
 }
 

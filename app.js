@@ -1497,6 +1497,7 @@ function renderResult(source = "entropy idle", options = {}) {
 
   if (!patterns.length) {
     els.title.textContent = "Filename data missing";
+    els.title.title = "Filename data missing";
     els.queryOutput.value = "Load filename-patterns.js before app.js.";
     els.urlOutput.value = "";
     els.entropyChip.textContent = "data unavailable";
@@ -1512,7 +1513,9 @@ function renderResult(source = "entropy idle", options = {}) {
   const roll = state.roll;
   if (updateStatic) {
     els.leadPrefixLabel.textContent = `${roll.family.name} · ${roll.pattern.prefix || "literal"} · ${roll.pattern.youtubeUsefulness || "unknown"} usefulness`;
+    els.leadPrefixLabel.title = els.leadPrefixLabel.textContent;
     els.title.textContent = roll.pattern.label;
+    els.title.title = roll.pattern.label;
     updateWheelStatus(roll.family);
   }
   if (revealQuery) {
